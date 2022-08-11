@@ -47,8 +47,9 @@ console.log(valid1);
  *
  **/
 let validateCred = (arr) => {
+    // Loop thru array from right to left
   for (let i = arr.length - 1; i >= 0; i--) {
-    console.log(arr[i]);
+    
   }
 };
 

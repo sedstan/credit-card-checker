@@ -37,20 +37,86 @@ const batch = [
   mystery4,
   mystery5,
 ];
-// console.log(batch);
 
 // Add your functions below:
-console.log(valid1);
 
-/**
- * return true when an array contains digits of a valid credit card number and false when it is invalid. This function should NOT mutate the values of the original array.
- *
- **/
-let validateCred = (arr) => {
-    // Loop thru array from right to left
-  for (let i = arr.length - 1; i >= 0; i--) {
-    
+// Find valid credit cards
+const validateCred = (array) => {
+  let tempArr = array.slice().reverse();
+
+  for (let i = 1; i < tempArr.length; i += 2) {
+    tempArr[i] *= 2;
+    if (tempArr[i] > 9) {
+      tempArr[i] -= 9;
+    }
   }
+
+  const result =
+    tempArr
+      .slice()
+      .reverse()
+      .reduce((a, b) => a + b) %
+      10 ===
+    0;
+
+  return result;
 };
 
-validateCred(valid1);
+// Test functions
+console.log(validateCred(valid1));  // Should return true
+console.log(validateCred(invalid1)); // Should return false
+
+// Find invalid credit cards
+const findInvalidCards = (nestedArrays) => {
+  let invalidCards = [];
+
+  for (const nestedArray of nestedArrays) {
+    if (!validateCred(nestedArray)) {
+      invalidCards.push(nestedArray);
+    }
+  }
+  return invalidCards;
+};
+
+// Test functions
+console.log(findInvalidCards([valid1, valid2, valid3, valid4, valid5])); // Shouldn't print anything
+console.log(findInvalidCards([invalid1, invalid2, invalid3, invalid4, invalid5]));  // Should print all of the numbers
+console.log(findInvalidCards(batch)); // Test what mysterny numbers are
+
+// Card companies that have invalid cards
+const idInvalidCardCompanies = (nestedArrays) => {
+  let cardCompanies = [];
+
+  for (const i of nestedArrays) {
+    switch (i[0]) {
+      case 3:
+        if (!cardCompanies.includes("Amex")) {
+          cardCompanies.push("Amex");
+        }
+        break;
+      case 4:
+        if (!cardCompanies.includes("Visa")) {
+          cardCompanies.push("Visa");
+        }
+        break;
+      case 5:
+        if (!cardCompanies.includes("Mastercard")) {
+          cardCompanies.push("Mastercard");
+        }
+        break;
+      case 6:
+        if (!cardCompanies.includes("Discover")) {
+          cardCompanies.push("Discover");
+        }
+      default:
+        if (!cardCompanies.includes("Company not found")) {
+          cardCompanies.push("Company not found");
+        }
+    }
+  }
+  return cardCompanies;
+};
+
+console.log(idInvalidCardCompanies([invalid1])); // Should print['visa']
+console.log(idInvalidCardCompanies([invalid2])); // Should print ['mastercard']
+console.log(idInvalidCardCompanies(batch)); // Find out which companies have mailed out invalid cards
